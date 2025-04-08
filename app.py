@@ -50,8 +50,7 @@ if uploaded_file:
     except AttributeError:
         st.experimental_rerun()
 
-# --- Verwerk PDF tot kennisbank ---
-@st.cache_resource
+# --- PDF verwerken tot kennisbank (ZONDER cache) ---
 def load_pdf_and_build_qa(pdf_path):
     reader = PdfReader(pdf_path)
     raw_text = ""
@@ -71,7 +70,7 @@ def load_pdf_and_build_qa(pdf_path):
     )
     return qa_chain
 
-# --- Check of PDF beschikbaar is ---
+# --- Check of PDF aanwezig is ---
 if not os.path.exists("personeelshandboek.pdf"):
     st.warning("📄 Upload eerst het personeelshandboek via de zijbalk.")
     st.stop()
