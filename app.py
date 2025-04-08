@@ -8,8 +8,8 @@ from langchain_openai import ChatOpenAI
 from langchain.chains import RetrievalQA
 
 # --- Pagina instellingen ---
-st.set_page_config(page_title="HR Chatbot", page_icon="💬")
-st.title("💬 Chat met het Personeelshandboek")
+st.set_page_config(page_title="Blom Chatbot", page_icon="💬")
+st.title("💬 Chat met het Blommie")
 
 # --- OpenAI API key ophalen ---
 try:
@@ -53,7 +53,7 @@ def load_pdf_and_build_qa(pdf_path):
 qa = load_pdf_and_build_qa(pdf_pad)
 
 # --- Chat interface ---
-vraag = st.chat_input("Stel je vraag over het handboek...")
+vraag = st.chat_input("Stel je vraag...")
 
 if vraag:
     st.chat_message("user").markdown(vraag)
