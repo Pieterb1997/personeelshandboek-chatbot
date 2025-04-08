@@ -30,7 +30,7 @@ if uploaded_file:
     with open("personeelshandboek.pdf", "wb") as f:
         f.write(uploaded_file.getbuffer())
     st.sidebar.success("Nieuw handboek is opgeslagen ✅")
-    st.experimental_rerun()
+    st.rerun()
 
 # --- Functie om kennisbank op te bouwen ---
 @st.cache_resource
