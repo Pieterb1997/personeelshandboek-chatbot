@@ -12,7 +12,7 @@ st.set_page_config(page_title="HR Chatbot", page_icon="💬")
 st.title("💬 Chat met het Personeelshandboek")
 
 # --- API key ophalen ---
-openai_api_key = st.secrets.get("OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY")
+openai_api_key = os.getenv("OPENAI_API_KEY")
 if not openai_api_key:
     st.error("⚠️ OpenAI API key ontbreekt.")
     st.stop()
