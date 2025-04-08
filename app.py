@@ -1,20 +1,26 @@
 import streamlit as st
+import os
+from PyPDF2 import PdfReader
+from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.embeddings import OpenAIEmbeddings
 from langchain_community.vectorstores import FAISS
-from langchain.text_splitter import CharacterTextSplitter
 from langchain_openai import ChatOpenAI
 from langchain.chains import RetrievalQA
-from PyPDF2 import PdfReader
-import os
 
 # --- Pagina instellingen ---
 st.set_page_config(page_title="HR Chatbot", page_icon="💬")
 st.title("💬 Chat met het Personeelshandboek")
 
-# --- API key ophalen ---
-openai_api_key = os.getenv("OPENAI_API_KEY")
+# --- OpenAI API key ophalen ---
+try:
+    openai_api_key = os.environ.get("OPENAI_API_KEY")  # Voor Render (env var)
+    if not openai_api_key:
+        openai_api_key = st.secrets["OPENAI_API_KEY"]  # Voor lokale dev
+except Exception:
+    openai_api_key = None
+
 if not openai_api_key:
-    st.error("⚠️ OpenAI API key ontbreekt.")
+    st.error("❌ OpenAI API key ontbreekt. Voeg deze toe als environment variable op Render.")
     st.stop()
 
 # --- Upload nieuw handboek ---
