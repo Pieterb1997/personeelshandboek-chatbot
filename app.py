@@ -1,6 +1,5 @@
 import streamlit as st
 import os
-import time
 from PyPDF2 import PdfReader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.embeddings import OpenAIEmbeddings
@@ -24,33 +23,14 @@ if not openai_api_key:
     st.error("❌ OpenAI API key ontbreekt.")
     st.stop()
 
-# --- Upload sectie in zijbalk ---
-st.sidebar.subheader("📄 Handboek uploaden")
-uploaded_file = st.sidebar.file_uploader("Upload een nieuw handboek (PDF)", type=["pdf"])
+# --- Check of PDF aanwezig is ---
+pdf_pad = "personeelshandboek.pdf"
 
-# Toon huidige actieve bestandsnaam (indien eerder geüpload)
-if os.path.exists("bestandsnaam.txt"):
-    with open("bestandsnaam.txt", "r") as f:
-        huidige_bestand = f.read().strip()
-    st.sidebar.caption(f"📌 Huidig actief bestand: `{huidige_bestand}`")
-else:
-    st.sidebar.caption("📌 Nog geen bestand geüpload.")
+if not os.path.exists(pdf_pad):
+    st.error("📄 Het bestand 'personeelshandboek.pdf' is niet gevonden in de projectmap.")
+    st.stop()
 
-# Verwerk nieuw geüpload bestand
-if uploaded_file:
-    with open("personeelshandboek.pdf", "wb") as f:
-        f.write(uploaded_file.getbuffer())
-    # Bewaar de originele naam
-    with open("bestandsnaam.txt", "w") as f:
-        f.write(uploaded_file.name)
-    st.sidebar.success(f"Nieuw handboek '{uploaded_file.name}' is opgeslagen ✅")
-
-    try:
-        st.rerun()
-    except AttributeError:
-        st.experimental_rerun()
-
-# --- PDF verwerken tot kennisbank (ZONDER cache) ---
+# --- Verwerk PDF tot kennisbank ---
 def load_pdf_and_build_qa(pdf_path):
     reader = PdfReader(pdf_path)
     raw_text = ""
@@ -70,12 +50,7 @@ def load_pdf_and_build_qa(pdf_path):
     )
     return qa_chain
 
-# --- Check of PDF aanwezig is ---
-if not os.path.exists("personeelshandboek.pdf"):
-    st.warning("📄 Upload eerst het personeelshandboek via de zijbalk.")
-    st.stop()
-
-qa = load_pdf_and_build_qa("personeelshandboek.pdf")
+qa = load_pdf_and_build_qa(pdf_pad)
 
 # --- Chat interface ---
 vraag = st.chat_input("Stel je vraag over het handboek...")
